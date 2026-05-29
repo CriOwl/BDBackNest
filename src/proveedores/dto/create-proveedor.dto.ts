@@ -8,4 +8,12 @@ export class CreateProveedorDto {
   @IsString()
   @IsNotEmpty()
   ruc: string;
+
+  @IsString()
+  @IsNotEmpty()
+  direccion: string;
+
+  @IsString()
+  @IsNotEmpty()
+  ciudad: string;
 }

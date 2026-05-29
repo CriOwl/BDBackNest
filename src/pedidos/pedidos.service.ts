@@ -24,8 +24,7 @@ export class PedidosService {
       take: limit,
       skip: offset,
       relations: {
-        cliente: true,
-        empleado: true,
+        persona: true,
         producto: true,
       },
     });
@@ -35,8 +34,7 @@ export class PedidosService {
     const pedido = await this.pedidoRepository.findOne({
       where: { id },
       relations: {
-        cliente: true,
-        empleado: true,
+        persona: true,
         producto: true,
       },
     });

@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Cliente } from '../../clientes/entities/cliente.entity';
 import { Empleado } from '../../empleados/entities/empleado.entity';
 import { Producto } from '../../productos/entities/producto.entity';
+import { Persona } from 'src/persona/entities/persona.entity';
+import { Inventario } from 'src/inventario/entities/inventario.entity';
 
 @Entity('pedidos')
 export class Pedido {
@@ -20,18 +21,33 @@ export class Pedido {
   @Column()
   cantidad: number;
 
-  @Column({ name: 'cliente_id' })
-  clienteId: number;
+  @Column({
+    type: 'varchar',
+    enum: ['activo', 'inactivo'],
+  })
+  estado: string;
 
-  @Column({ name: 'empleado_id' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  fecha_creacion: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  fecha_modificacion: Date;
+  
+  @Column({ name: 'person_id' })
   empleadoId: number;
 
   @Column({ name: 'producto_id' })
   productoId: number;
 
-  @ManyToOne(() => Cliente, (cliente) => cliente.pedidos)
-  @JoinColumn({ name: 'cliente_id' })
-  cliente: Cliente;
+  @ManyToOne(() => Persona, (persona) => persona.pedidos)
+  @JoinColumn({ name: 'person_id' })
+  persona: Persona;
 
   @ManyToOne(() => Empleado, (empleado) => empleado.pedidos)
   @JoinColumn({ name: 'empleado_id' })
@@ -40,4 +56,5 @@ export class Pedido {
   @ManyToOne(() => Producto, (producto) => producto.pedidos)
   @JoinColumn({ name: 'producto_id' })
   producto: Producto;
+
 }

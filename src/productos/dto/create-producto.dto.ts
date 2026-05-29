@@ -12,4 +12,8 @@ export class CreateProductoDto {
   @IsNumber()
   @IsNotEmpty()
   proveedorId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  catalogo: number;
 }
