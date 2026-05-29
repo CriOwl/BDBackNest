@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { Catalogo } from '../../catalogo/entities/catalogo.entity';
-import { on } from 'events';
-import { Pedido } from 'src/pedidos/entities/pedido.entity';
+import { Pedido } from '../../pedidos/entities/pedido.entity';
 
 @Entity('persona')
 export class Persona {

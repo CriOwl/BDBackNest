@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
-import { Persona } from 'src/persona/entities/persona.entity';
-import { PedidoDetalle } from 'src/pedido-detalle/entities/pedido-detalle.entity';
+import { Persona } from '../../persona/entities/persona.entity';
+import { PedidoDetalle } from '../../pedido-detalle/entities/pedido-detalle.entity';
 
 @Entity('pedidos')
 export class Pedido {

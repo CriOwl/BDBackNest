@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Inventario } from './entities/inventario.entity';
 import { CreateInventarioDto } from './dto/create-inventario.dto';
 import { UpdateInventarioDto } from './dto/update-inventario.dto';
@@ -14,7 +14,13 @@ export class InventarioService {
   ) {}
 
   async create(createInventarioDto: CreateInventarioDto): Promise<Inventario> {
-    const inventario = this.inventarioRepository.create(createInventarioDto);
+    const { producto_id, sucursal_id, ...inventarioDto } = createInventarioDto;
+    const inventarioData: DeepPartial<Inventario> = {
+      ...inventarioDto,
+      producto: { id: producto_id },
+      sucursal: { id: sucursal_id },
+    };
+    const inventario = this.inventarioRepository.create(inventarioData);
     return await this.inventarioRepository.save(inventario);
   }
 
@@ -46,7 +52,18 @@ export class InventarioService {
 
   async update(id: number, updateInventarioDto: UpdateInventarioDto): Promise<Inventario> {
     const inventario = await this.findOne(id);
-    this.inventarioRepository.merge(inventario, updateInventarioDto);
+    const { producto_id, sucursal_id, ...inventarioDto } = updateInventarioDto;
+    const inventarioData: DeepPartial<Inventario> = { ...inventarioDto };
+
+    if (producto_id !== undefined) {
+      inventarioData.producto = { id: producto_id };
+    }
+
+    if (sucursal_id !== undefined) {
+      inventarioData.sucursal = { id: sucursal_id };
+    }
+
+    this.inventarioRepository.merge(inventario, inventarioData);
     return await this.inventarioRepository.save(inventario);
   }
 
