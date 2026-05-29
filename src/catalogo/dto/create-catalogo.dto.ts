@@ -1,7 +1,13 @@
-import { IsString, IsNotEmpty, IsNumber, IsPositive, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
+
+export enum Estado {
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
+}
 
 export class CreateCatalogoDto {
-  @IsDateString()
+
+  @IsString()
   @IsNotEmpty()
   nombre: string;
 
@@ -9,8 +15,6 @@ export class CreateCatalogoDto {
   @IsNotEmpty()
   descripcion: string;
 
-  @IsString()
-  @IsPositive()
-  estado: number;
-
+  @IsEnum(Estado)
+  estado: Estado;
 }

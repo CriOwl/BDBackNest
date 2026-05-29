@@ -14,7 +14,7 @@ export class PersonaService {
   ) {}
 
   async create(createPersonaDto: CreatePersonaDto): Promise<Persona> {
-    const persona = this.personaRepository.create(createPersonaDto);
+    const persona = this.personaRepository.create({ ...createPersonaDto, catalogo: { id: createPersonaDto.catalogoId } });
     return await this.personaRepository.save(persona);
   }
 
@@ -35,10 +35,19 @@ export class PersonaService {
   }
 
   async update(id: number, updatePersonaDto: UpdatePersonaDto): Promise<Persona> {
-    const persona = await this.findOne(id);
-    this.personaRepository.merge(persona, updatePersonaDto);
-    return await this.personaRepository.save(persona);
-  }
+  const persona = await this.findOne(id);
+
+  const { catalogoId, ...rest } = updatePersonaDto;
+
+  const updated = {
+    ...rest,
+    ...(catalogoId && { catalogo: { id: catalogoId } }),
+  };
+
+  this.personaRepository.merge(persona, updated);
+
+  return await this.personaRepository.save(persona);
+}
 
   async remove(id: number): Promise<void> {
     const persona = await this.findOne(id);

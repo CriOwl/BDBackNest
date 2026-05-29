@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { Catalogo } from '../../catalogo/entities/catalogo.entity';
 import { on } from 'events';
 import { Pedido } from 'src/pedidos/entities/pedido.entity';
@@ -24,8 +24,6 @@ export class Persona {
   @Column()
   ciudad: string;
 
-  @Column({ name: 'id_rol' })
-  catalogo_id: number;
 
   @Column({
     type: 'varchar',
@@ -39,15 +37,16 @@ export class Persona {
   })
   fecha_creacion: Date;
 
-  @Column({
+  @UpdateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
   })
   fecha_modificacion: Date;
   
-  @ManyToOne(() => Catalogo, (catalogo) => catalogo.personas)
-  @JoinColumn({ name: 'id_rol' })
-  catalogo: Catalogo;
+  @ManyToOne(() => Catalogo, (catalogo) => catalogo.personas, {
+  eager: true,
+})
+@JoinColumn({ name: 'id_rol' })
+catalogo: Catalogo;
 
   @OneToMany(() => Pedido, (pedido) => pedido.persona)
   pedidos: Pedido[];

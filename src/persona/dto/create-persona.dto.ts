@@ -1,5 +1,9 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsEnum } from 'class-validator';
 
+export enum Estado {
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
+}
 export class CreatePersonaDto {
   @IsString()
   @IsNotEmpty()
@@ -20,4 +24,11 @@ export class CreatePersonaDto {
   @IsString()
   @IsNotEmpty()
   ciudad: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  catalogoId: number;
+
+   @IsEnum(Estado)
+    estado: Estado;
 }
