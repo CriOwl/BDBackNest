@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Proveedor } from '../../proveedores/entities/proveedor.entity';
-import { Pedido } from '../../pedidos/entities/pedido.entity';
+import { PedidoDetalle } from 'src/pedido-detalle/entities/pedido-detalle.entity';
 import { Inventario } from 'src/inventario/entities/inventario.entity';
 import { Catalogo } from 'src/catalogo/entities/catalogo.entity';
 
@@ -40,12 +40,15 @@ export class Producto {
   @JoinColumn({ name: 'proveedor_id' })
   proveedor: Proveedor;
 
+  @Column({ name: 'id_categoria' })
+  catalogo: number;
+
   @ManyToOne(() => Catalogo, (catalogo) => catalogo.productos)
   @JoinColumn({ name: 'id_categoria' })
   catalogos: Catalogo;
 
-  @OneToMany(() => Pedido, (pedido) => pedido.producto)
-  pedidos: Pedido[];
+  @OneToMany(() => PedidoDetalle, (detalle) => detalle.producto)
+  pedidoDetalles: PedidoDetalle[];
 
   @OneToMany(() => Inventario, (inventario) => inventario.producto)
   inventarios: Inventario[];

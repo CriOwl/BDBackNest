@@ -3,12 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Empleado } from './empleados/entities/empleado.entity';
 import { Proveedor } from './proveedores/entities/proveedor.entity';
 import { Producto } from './productos/entities/producto.entity';
 import { Pedido } from './pedidos/entities/pedido.entity';
-import { EmpleadosService } from './empleados/empleados.service';
-import { EmpleadosController } from './empleados/empleados.controller';
 import { ProveedoresService } from './proveedores/proveedores.service';
 import { ProveedoresController } from './proveedores/proveedores.controller';
 import { ProductosService } from './productos/productos.service';
@@ -27,6 +24,8 @@ import { InventarioController } from './inventario/inventario.controller';
 import { InventarioService } from './inventario/inventario.service';
 import { SucursalController } from './sucursal/sucursal.controller';
 import { SucursalService } from './sucursal/sucursal.service';
+import { PedidoDetalle } from './pedido-detalle/entities/pedido-detalle.entity';
+import { PedidoDetalleModule } from './pedido-detalle/pedido-detalle.module';
 
 @Module({
   imports: [
@@ -43,17 +42,17 @@ import { SucursalService } from './sucursal/sucursal.service';
         username: configService.get<string>('DB_USER', 'app_user'),
         password: configService.get<string>('DB_PASSWORD', 'app_password'),
         database: configService.get<string>('DB_NAME', 'app_db'),
-        entities: [Catalogo, Persona, Empleado, Proveedor, Producto, Pedido, Sucursal, Inventario],
+        entities: [Catalogo, Persona, Proveedor, Producto, Pedido, Sucursal, Inventario, PedidoDetalle],
         synchronize: true, // Solo para desarrollo
       }),
     }),
-    TypeOrmModule.forFeature([Catalogo, Persona, Empleado, Proveedor, Producto, Pedido, Sucursal, Inventario]),
+    TypeOrmModule.forFeature([Catalogo, Persona, Proveedor, Producto, Pedido, Sucursal, Inventario, PedidoDetalle]),
+    PedidoDetalleModule,
   ],
   controllers: [
     AppController,
     CatalogoController,
     PersonaController,
-    EmpleadosController,
     ProveedoresController,
     ProductosController,
     PedidosController,
@@ -64,7 +63,6 @@ import { SucursalService } from './sucursal/sucursal.service';
     AppService,
     CatalogoService,
     PersonaService,
-    EmpleadosService,
     ProveedoresService,
     ProductosService,
     PedidosService,

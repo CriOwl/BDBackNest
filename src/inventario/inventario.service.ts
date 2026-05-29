@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Inventario } from './entities/inventario.entity';
 import { CreateInventarioDto } from './dto/create-inventario.dto';
 import { UpdateInventarioDto } from './dto/update-inventario.dto';
+import { QueryDto } from '../common/dto/query.dto';
 
 @Injectable()
 export class InventarioService {
-  create(createInventarioDto: CreateInventarioDto) {
-    return 'This action adds a new inventario';
+  constructor(
+    @InjectRepository(Inventario)
+    private readonly inventarioRepository: Repository<Inventario>,
+  ) {}
+
+  async create(createInventarioDto: CreateInventarioDto): Promise<Inventario> {
+    const inventario = this.inventarioRepository.create(createInventarioDto);
+    return await this.inventarioRepository.save(inventario);
   }
 
-  findAll() {
-    return `This action returns all inventario`;
+  async findAll(queryDto: QueryDto): Promise<Inventario[]> {
+    const { limit = 10, offset = 0 } = queryDto;
+    return await this.inventarioRepository.find({
+      take: limit,
+      skip: offset,
+      relations: {
+        producto: true,
+        sucursal: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inventario`;
+  async findOne(id: number): Promise<Inventario> {
+    const inventario = await this.inventarioRepository.findOne({
+      where: { id },
+      relations: {
+        producto: true,
+        sucursal: true,
+      },
+    });
+    if (!inventario) {
+      throw new NotFoundException(`Inventario con id ${id} no encontrado`);
+    }
+    return inventario;
   }
 
-  update(id: number, updateInventarioDto: UpdateInventarioDto) {
-    return `This action updates a #${id} inventario`;
+  async update(id: number, updateInventarioDto: UpdateInventarioDto): Promise<Inventario> {
+    const inventario = await this.findOne(id);
+    this.inventarioRepository.merge(inventario, updateInventarioDto);
+    return await this.inventarioRepository.save(inventario);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inventario`;
+  async remove(id: number): Promise<void> {
+    const inventario = await this.findOne(id);
+    await this.inventarioRepository.remove(inventario);
   }
 }

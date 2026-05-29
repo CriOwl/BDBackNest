@@ -18,18 +18,22 @@ export class PedidosController {
     return this.pedidosService.findAll(queryDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.pedidosService.findOne(id);
+  @Get(':id/:clienteId')
+  findOne(@Param('id', ParseIntPipe) id: number, @Param('clienteId', ParseIntPipe) clienteId: number) {
+    return this.pedidosService.findOne(id, clienteId);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidosService.update(id, updatePedidoDto);
+  @Patch(':id/:clienteId')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('clienteId', ParseIntPipe) clienteId: number,
+    @Body() updatePedidoDto: UpdatePedidoDto,
+  ) {
+    return this.pedidosService.update(id, clienteId, updatePedidoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.pedidosService.remove(id);
+  @Delete(':id/:clienteId')
+  remove(@Param('id', ParseIntPipe) id: number, @Param('clienteId', ParseIntPipe) clienteId: number) {
+    return this.pedidosService.remove(id, clienteId);
   }
 }

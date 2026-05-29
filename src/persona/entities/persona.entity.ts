@@ -48,6 +48,9 @@ export class Persona {
 @JoinColumn({ name: 'id_rol' })
 catalogo: Catalogo;
 
-  @OneToMany(() => Pedido, (pedido) => pedido.persona)
-  pedidos: Pedido[];
+  @OneToMany(() => Pedido, (pedido) => pedido.cliente)
+  pedidosComoCliente: Pedido[];
+
+  @OneToMany(() => Pedido, (pedido) => pedido.empleado)
+  pedidosComoEmpleado: Pedido[];
 }

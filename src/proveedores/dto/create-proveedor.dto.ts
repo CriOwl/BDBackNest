@@ -1,4 +1,9 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
+
+export enum EstadoProveedor {
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
+}
 
 export class CreateProveedorDto {
   @IsString()
@@ -16,4 +21,7 @@ export class CreateProveedorDto {
   @IsString()
   @IsNotEmpty()
   ciudad: string;
+
+  @IsEnum(EstadoProveedor)
+  estado: EstadoProveedor;
 }

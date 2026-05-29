@@ -1,25 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Empleado } from '../../empleados/entities/empleado.entity';
-import { Producto } from '../../productos/entities/producto.entity';
+import { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Persona } from 'src/persona/entities/persona.entity';
-import { Inventario } from 'src/inventario/entities/inventario.entity';
+import { PedidoDetalle } from 'src/pedido-detalle/entities/pedido-detalle.entity';
 
 @Entity('pedidos')
 export class Pedido {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'date' })
+  @PrimaryColumn({ name: 'cliente_id' })
+  clienteId: number;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fecha: Date;
 
-  @Column('decimal', { precision: 12, scale: 2 })
+  @Column('decimal', { precision: 12, scale: 2, default: 0.00 })
   total: number;
 
   @Column({ name: 'forma_pago' })
   formaPago: string;
-
-  @Column()
-  cantidad: number;
 
   @Column({
     type: 'varchar',
@@ -38,23 +36,18 @@ export class Pedido {
     default: () => 'CURRENT_TIMESTAMP',
   })
   fecha_modificacion: Date;
-  
-  @Column({ name: 'person_id' })
+
+  @Column({ name: 'empleado_id' })
   empleadoId: number;
 
-  @Column({ name: 'producto_id' })
-  productoId: number;
+  @ManyToOne(() => Persona, (persona) => persona.pedidosComoCliente, { onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'cliente_id', referencedColumnName: 'id' })
+  cliente: Persona;
 
-  @ManyToOne(() => Persona, (persona) => persona.pedidos)
-  @JoinColumn({ name: 'person_id' })
-  persona: Persona;
+  @ManyToOne(() => Persona, (persona) => persona.pedidosComoEmpleado, { onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'empleado_id', referencedColumnName: 'id' })
+  empleado: Persona;
 
-  @ManyToOne(() => Empleado, (empleado) => empleado.pedidos)
-  @JoinColumn({ name: 'empleado_id' })
-  empleado: Empleado;
-
-  @ManyToOne(() => Producto, (producto) => producto.pedidos)
-  @JoinColumn({ name: 'producto_id' })
-  producto: Producto;
-
+  @OneToMany(() => PedidoDetalle, (detalle) => detalle.pedido)
+  detalles: PedidoDetalle[];
 }

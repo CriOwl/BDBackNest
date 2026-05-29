@@ -1,21 +1,22 @@
-import { IsString, IsNotEmpty, IsNumber, IsPositive, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsEnum, IsOptional, IsDateString } from 'class-validator';
+
+export enum EstadoPedido {
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
+}
 
 export class CreatePedidoDto {
+  @IsOptional()
   @IsDateString()
-  @IsNotEmpty()
-  fecha: string;
+  fecha?: string;
 
+  @IsOptional()
   @IsNumber()
-  @IsPositive()
-  total: number;
+  total?: number;
 
   @IsString()
   @IsNotEmpty()
   formaPago: string;
-
-  @IsNumber()
-  @IsPositive()
-  cantidad: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -25,7 +26,6 @@ export class CreatePedidoDto {
   @IsNotEmpty()
   empleadoId: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  productoId: number;
+  @IsEnum(EstadoPedido)
+  estado: EstadoPedido;
 }

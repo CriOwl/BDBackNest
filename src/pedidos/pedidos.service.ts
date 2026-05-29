@@ -24,34 +24,35 @@ export class PedidosService {
       take: limit,
       skip: offset,
       relations: {
-        persona: true,
-        producto: true,
+        cliente: true,
+        empleado: true,
       },
     });
   }
 
-  async findOne(id: number): Promise<Pedido> {
+  async findOne(id: number, clienteId: number): Promise<Pedido> {
     const pedido = await this.pedidoRepository.findOne({
-      where: { id },
+      where: { id, clienteId },
       relations: {
-        persona: true,
-        producto: true,
+        cliente: true,
+        empleado: true,
+        detalles: true,
       },
     });
     if (!pedido) {
-      throw new NotFoundException(`Pedido con id ${id} no encontrado`);
+      throw new NotFoundException(`Pedido con id ${id} y clienteId ${clienteId} no encontrado`);
     }
     return pedido;
   }
 
-  async update(id: number, updatePedidoDto: UpdatePedidoDto): Promise<Pedido> {
-    const pedido = await this.findOne(id);
+  async update(id: number, clienteId: number, updatePedidoDto: UpdatePedidoDto): Promise<Pedido> {
+    const pedido = await this.findOne(id, clienteId);
     this.pedidoRepository.merge(pedido, updatePedidoDto);
     return await this.pedidoRepository.save(pedido);
   }
 
-  async remove(id: number): Promise<void> {
-    const pedido = await this.findOne(id);
+  async remove(id: number, clienteId: number): Promise<void> {
+    const pedido = await this.findOne(id, clienteId);
     await this.pedidoRepository.remove(pedido);
   }
 }
