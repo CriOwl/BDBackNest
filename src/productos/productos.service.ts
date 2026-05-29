@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Producto } from './entities/producto.entity';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
@@ -14,7 +14,13 @@ export class ProductosService {
   ) {}
 
   async create(createProductoDto: CreateProductoDto): Promise<Producto> {
-    const producto = this.productoRepository.create(createProductoDto);
+    const { proveedorId, catalogo, ...productoDto } = createProductoDto;
+    const productoData: DeepPartial<Producto> = {
+      ...productoDto,
+      proveedor: { id: proveedorId },
+      catalogos: { id: catalogo },
+    };
+    const producto = this.productoRepository.create(productoData);
     return await this.productoRepository.save(producto);
   }
 
@@ -23,14 +29,14 @@ export class ProductosService {
     return await this.productoRepository.find({
       take: limit,
       skip: offset,
-      relations: { proveedor: true },
+      relations: { proveedor: true, catalogos: true },
     });
   }
 
   async findOne(id: number): Promise<Producto> {
     const producto = await this.productoRepository.findOne({
       where: { id },
-      relations: { proveedor: true },
+      relations: { proveedor: true, catalogos: true },
     });
     if (!producto) {
       throw new NotFoundException(`Producto con id ${id} no encontrado`);
@@ -40,7 +46,18 @@ export class ProductosService {
 
   async update(id: number, updateProductoDto: UpdateProductoDto): Promise<Producto> {
     const producto = await this.findOne(id);
-    this.productoRepository.merge(producto, updateProductoDto);
+    const { proveedorId, catalogo, ...productoDto } = updateProductoDto;
+    const productoData: DeepPartial<Producto> = { ...productoDto };
+
+    if (proveedorId !== undefined) {
+      productoData.proveedor = { id: proveedorId };
+    }
+
+    if (catalogo !== undefined) {
+      productoData.catalogos = { id: catalogo };
+    }
+
+    this.productoRepository.merge(producto, productoData);
     return await this.productoRepository.save(producto);
   }
 

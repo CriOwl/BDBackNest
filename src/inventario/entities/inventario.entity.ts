@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Producto } from 'src/productos/entities/producto.entity';
-import { Sucursal } from 'src/sucursal/entities/sucursal.entity';
+import { Producto } from '../../productos/entities/producto.entity';
+import { Sucursal } from '../../sucursal/entities/sucursal.entity';
 
 @Entity('inventario')
 export class Inventario {

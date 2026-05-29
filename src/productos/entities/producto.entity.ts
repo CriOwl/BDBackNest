@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Proveedor } from '../../proveedores/entities/proveedor.entity';
-import { PedidoDetalle } from 'src/pedido-detalle/entities/pedido-detalle.entity';
-import { Inventario } from 'src/inventario/entities/inventario.entity';
-import { Catalogo } from 'src/catalogo/entities/catalogo.entity';
+import { PedidoDetalle } from '../../pedido-detalle/entities/pedido-detalle.entity';
+import { Inventario } from '../../inventario/entities/inventario.entity';
+import { Catalogo } from '../../catalogo/entities/catalogo.entity';
 
 @Entity('productos')
 export class Producto {

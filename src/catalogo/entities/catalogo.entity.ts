@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 
 import { Persona } from '../../persona/entities/persona.entity';
-import { Producto } from 'src/productos/entities/producto.entity';
+import { Producto } from '../../productos/entities/producto.entity';
 
 @Entity('catalogo')
 export class Catalogo {
