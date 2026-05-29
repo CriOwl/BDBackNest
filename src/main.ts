@@ -1,19 +1,27 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {ValidationPipe} from '@nestjs/common';
+import {AppModule} from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+    const app = await NestFactory.create(AppModule);
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+    app.enableCors({
+        origin: '*', // puedes reemplazarlo por tu frontend
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
+
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+        }),
+    );
+
+    await app.listen(process.env.PORT ?? 3000);
+
+    console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();
