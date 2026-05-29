@@ -18,12 +18,6 @@ export class Inventario {
   @Column()
   cantidad: number;
 
-  @Column({ name: 'id_producto' })
-  producto_id: number;
-
-  @Column({ name: 'id_sucursal' })
-  sucursal_id: number;
-
   @Column({
     type: 'varchar',
     enum: ['activo', 'inactivo'],

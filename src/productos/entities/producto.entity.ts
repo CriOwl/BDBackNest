@@ -15,8 +15,6 @@ export class Producto {
   @Column('decimal', { precision: 10, scale: 2 })
   precio: number;
 
-  @Column({ name: 'proveedor_id' })
-  proveedorId: number;
 
   @Column({
     type: 'varchar',
@@ -40,10 +38,8 @@ export class Producto {
   @JoinColumn({ name: 'proveedor_id' })
   proveedor: Proveedor;
 
-  @Column({ name: 'id_categoria' })
-  catalogo: number;
-
-  @ManyToOne(() => Catalogo, (catalogo) => catalogo.productos)
+  @ManyToOne(() => Catalogo, (catalogo) => catalogo.productos,{
+  eager: true})
   @JoinColumn({ name: 'id_categoria' })
   catalogos: Catalogo;
 
